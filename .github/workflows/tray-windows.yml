@@ -1,0 +1,33 @@
+name: Tray Windows build
+
+on:
+  push:
+    branches: [tray-background]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: flutter-actions/setup-flutter@v4
+        with:
+          version: '3.41.9'
+          channel: stable
+      - name: Install dependencies
+        working-directory: app
+        run: flutter pub get
+      - name: Test on Windows
+        working-directory: app
+        run: flutter test
+      - name: Build Windows release
+        working-directory: app
+        run: flutter build windows --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LocalSend-tray-windows-x64
+          path: app/build/windows/x64/runner/Release/
+          if-no-files-found: error

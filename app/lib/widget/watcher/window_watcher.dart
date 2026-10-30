@@ -116,8 +116,15 @@ class _WindowWatcherState extends State<WindowWatcher> with WindowListener, Refe
   }
 
   @override
-  void onWindowMinimize() {
+  Future<void> onWindowMinimize() async {
     ref.notifier(sleepProvider).setState((_) => true);
+    if (checkPlatform([TargetPlatform.windows]) && ref.read(settingsProvider).minimizeToTray) {
+      try {
+        await hideToTray();
+      } catch (e) {
+        _logger.warning('Failed to minimize to tray', e);
+      }
+    }
   }
 
   @override
