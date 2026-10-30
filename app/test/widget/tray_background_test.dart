@@ -41,10 +41,12 @@ void main() {
     final persistence = MockPersistenceService();
     when(persistence.isMinimizeToTray()).thenReturn(trayEnabled);
     final container = RefenaContainer(overrides: [persistenceProvider.overrideWithValue(persistence)]);
-    await tester.pumpWidget(RefenaScope(
-      container: container,
-      child: const WindowWatcher(child: SizedBox()),
-    ));
+    await tester.pumpWidget(
+      RefenaScope(
+        container: container,
+        child: const WindowWatcher(child: SizedBox()),
+      ),
+    );
     await tester.pump();
     calls.clear();
     return container;
